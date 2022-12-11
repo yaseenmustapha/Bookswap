@@ -19,4 +19,4 @@ Try http://localhost:5000/members or http://127.0.0.1:5000/members in your brows
 cd client
 npm start
 ```
-Try http://localhost:3000 or http://127.0.0.1:3000/members to test frontend.
+Try http://localhost:3000 or http://127.0.0.1:3000 to test frontend.
