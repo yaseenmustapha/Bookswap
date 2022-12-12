@@ -17,6 +17,7 @@ Try http://localhost:5000/members or http://127.0.0.1:5000/members in your brows
 ## To start React frontend (do in a new terminal):
 ```
 cd client
+npm install
 npm start
 ```
 Try http://localhost:3000 or http://127.0.0.1:3000 to test frontend.
