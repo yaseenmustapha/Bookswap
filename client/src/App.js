@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Header from './components/Header'
+import YourListings from './components/YourListings'
 
 function App() {
 
@@ -19,6 +20,13 @@ function App() {
   return (
     <div>
       <Header></Header>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      
+      <YourListings></YourListings>
       {(typeof data.members === 'undefined') ? (
         <p>Loading...</p>
       ) : (
