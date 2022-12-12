@@ -1,23 +1,36 @@
+import { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 function YourListings() {
+  const [data, setData] = useState([{}])
+
+  useEffect(() => {
+    fetch("/listings").then(
+      res => res.json()
+    ).then(
+      data => {
+        setData(data)
+        console.log(data)
+      }
+    )
+  }, [])
+
     return (
         <Container>
+          <h3>Your listings:</h3>
           <Row>
-            <Col>Witcher 3</Col>
-            <Col><p className="text-center" >Witcher 3</p></Col>
-          </Row>
-          <Row>
-            <Col  xs={12} sm={20} md={5}><img style={{ width: 200, height: 250 }} src="https://www.giantbomb.com/a/uploads/scale_medium/0/3699/2945734-the%20witcher%203%20-%20wild%20hunt.jpg" alt="React Image" /> </Col>
-            <Col><img style={{ width: 200, height: 250 }} src="https://www.giantbomb.com/a/uploads/scale_medium/0/3699/2945734-the%20witcher%203%20-%20wild%20hunt.jpg" alt="React Image" /> </Col>
-          </Row>
-            <br></br>
-            <br></br>
-          <Row>
-            <Col><img style={{ width: 200, height: 250 }} src="https://www.giantbomb.com/a/uploads/scale_medium/0/3699/2945734-the%20witcher%203%20-%20wild%20hunt.jpg" alt="React Image" /> </Col>
-            <Col><img style={{ width: 200, height: 250 }} src="https://www.giantbomb.com/a/uploads/scale_medium/0/3699/2945734-the%20witcher%203%20-%20wild%20hunt.jpg" alt="React Image" /> </Col>
+            {(typeof data.listings === 'undefined') ? (
+              <p>Loading listings...</p>
+            ) : (
+              data.listings.map((listing, i) => (
+                <Col key={i}>
+                  <p className="text-center">{listing.name}</p>
+                  <img style={{ width: 200, height: 250, display: "block", margin: "auto" }} src={listing.img} alt="Game" />
+                </Col>
+              ))
+            )}
           </Row>
         </Container>
     );

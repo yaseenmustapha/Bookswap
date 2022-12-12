@@ -20,12 +20,6 @@ function App() {
   return (
     <div>
       <Header></Header>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      
       <YourListings></YourListings>
       {(typeof data.members === 'undefined') ? (
         <p>Loading...</p>
