@@ -26,7 +26,7 @@ function YourListings() {
             ) : (
               data.listings.map((listing, i) => (
                 <Col key={i}>
-                  <p className="text-center">{listing.name}</p>
+                  <h5 className="text-center">{listing.name}</h5>
                   <img style={{ width: 200, height: 250, display: "block", margin: "auto" }} src={listing.img} alt="Game" />
                 </Col>
               ))
