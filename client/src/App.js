@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Header from './components/Header'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <div>
+      <Header></Header>
       {(typeof data.members === 'undefined') ? (
         <p>Loading...</p>
       ) : (
