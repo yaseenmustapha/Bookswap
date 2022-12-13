@@ -5,8 +5,9 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-ip = 'localhost'
-client = MongoClient(ip, 27017)
+username = 'gameswap'
+password = 'SO3v6uVCwfQqpzPS'
+client = MongoClient("mongodb+srv://" + username + ":" + password + "@cluster0.tupmdgp.mongodb.net/?retryWrites=true&w=majority")
 db = client.gameswap_db
 listings_collection = db.listings_collection
 listings_collection.find_one()
