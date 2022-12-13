@@ -28,6 +28,7 @@ function YourListings() {
                 <Col key={i}>
                   <h5 className="text-center">{listing.name}</h5>
                   <img style={{ width: 200, height: 250, display: "block", margin: "auto" }} src={listing.img} alt="Game" />
+                  <h6 className="text-center">${Number(listing.price).toFixed(2)}</h6>
                 </Col>
               ))
             )}
