@@ -42,7 +42,7 @@ function Register() {
   return (
     <div>
       <Header></Header>
-      <Form>
+      <Form style={{width: '400px', margin: 'auto', paddingTop: '40px'}}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Username</Form.Label>
           <Form.Control value={username} type="username" placeholder="Enter username" onChange={handleChangeUsername} />
