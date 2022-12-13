@@ -29,6 +29,7 @@ function Header() {
               </NavDropdown>
               <Nav.Item className="ml-auto">
                 <Button variant="success">Create listing</Button>
+                <Button variant="success" href="/login">Login</Button>
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
