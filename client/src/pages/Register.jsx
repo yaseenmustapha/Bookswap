@@ -1,22 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 
 function Register() {
-    function tryRegister() {
-        axios.post("/user", {
-            username: "Fred",
-            password: "Flintstone"
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-    }
+  const [username, setUsername] = useState()
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
+
+  const handleChangeUsername = e => {
+    e.preventDefault(); // prevent the default action
+    setUsername(e.target.value); // set name to e.target.value (event)
+  }
+
+  const handleChangeEmail = e => {
+    e.preventDefault(); // prevent the default action
+    setEmail(e.target.value); // set name to e.target.value (event)
+  }
+
+  const handleChangePassword = e => {
+    e.preventDefault(); // prevent the default action
+    setPassword(e.target.value); // set name to e.target.value (event)
+  }
+
+  function tryRegister() {
+      axios.post("/user", {
+          username: username,
+          email: email,
+          password: password
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+  }
   
 
   return (
@@ -25,19 +45,22 @@ function Register() {
       <Form>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Username</Form.Label>
-          <Form.Control type="username" placeholder="Enter username" />
+          <Form.Control value={username} type="username" placeholder="Enter username" onChange={handleChangeUsername} />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control value={email} type="username" placeholder="Enter email" onChange={handleChangeEmail} />
           <Form.Text className="text-muted">
-            We'll never share your data with anyone else (except Rather).
+            We'll never share your email with anyone else (except Rather).
           </Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control value={password} type="password" placeholder="Password" onChange={handleChangePassword} />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
+
         <Button variant="primary" type="submit" onClick={tryRegister}>
           Submit
         </Button>
