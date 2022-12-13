@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 username = 'gameswap'
 password = 'SO3v6uVCwfQqpzPS'
-client = MongoClient("mongodb+srv://" + username + ":" + password + "@cluster0.tupmdgp.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient("mongodb+srv://" + username + ":" + password + "@cluster0.tupmdgp.mongodb.net/?retryWrites=true&w=majority", tls=True, tlsAllowInvalidCertificates=True)
 db = client.gameswap_db
 listings_collection = db.listings_collection
 listings_collection.find_one()
