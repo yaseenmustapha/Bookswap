@@ -13,7 +13,7 @@ function Header() {
     return (
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">GameSwap</Navbar.Brand>
+          <Navbar.Brand href="/">GameSwap</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
@@ -29,7 +29,7 @@ function Header() {
               </NavDropdown>
               <Nav.Item className="ml-auto">
                 <Button variant="success">Create listing</Button>
-                <Button variant="success" href="/login">Login</Button>
+                <Button variant="success" href="/register">Register</Button>
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
