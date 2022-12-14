@@ -59,6 +59,13 @@ def login():
 
     return jsonify({'msg': 'The username or password is incorrect'}), 401
 
+@app.route("/createlisting", methods=["POST"])
+def createlisting():
+    new_listing = request.get_json() # store the json body request
+    new_listing["listing_id"] = str(listings_collection.count_documents({}) + 1)
+    listings_collection.insert_one(new_listing)
+    return jsonify({'msg': 'User created successfully'}), 201
+
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 

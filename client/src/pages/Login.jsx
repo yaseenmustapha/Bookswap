@@ -5,22 +5,19 @@ import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
+import { useCookies } from "react-cookie";
 
-function Register() {
+function Login() {
   let navigate = useNavigate();
   const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
+  // const [cookies, setCookie] = useCookies(['jwt', 'username']);
+  const [, setCookie] = useCookies(["jwt", "username"]);
 
   const handleChangeUsername = (e) => {
     e.preventDefault(); // prevent the default action
     setUsername(e.target.value); // set name to e.target.value (event)
-  };
-
-  const handleChangeEmail = (e) => {
-    e.preventDefault(); // prevent the default action
-    setEmail(e.target.value); // set name to e.target.value (event)
   };
 
   const handleChangePassword = (e) => {
@@ -28,19 +25,28 @@ function Register() {
     setPassword(e.target.value); // set name to e.target.value (event)
   };
 
-  const tryRegister = async (e) => {
+  function createCookie(access_token) {
+    setCookie("jwt", access_token, { path: "/" });
+    setCookie("username", username, { path: "/" });
+    // setCookie("jwt", access_token, { path: "/", secure: true, httpOnly: true, sameSite: "lax" });
+    // setCookie("username", username, { path: "/", secure: true, httpOnly: true, sameSite: "lax" });
+  }
+
+  const tryLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/user", {
+      const response = await axios.post("/login", {
         username: username,
-        email: email,
         password: password,
       });
-      console.log("Register response: ", response)
-      if (response.status === 201) navigate("/");
+      console.log("Login response: ", response);
+      if (response.status === 200) {
+        createCookie(response.data.access_token);
+        navigate("/");
+      }
     } catch (error) {
-      console.log("Register error: ", error);
-      if (error.response.status === 409) setError(true);
+      console.log("Login error: ", error);
+      if (error.response.status === 401) setError(true);
     }
   };
 
@@ -58,19 +64,6 @@ function Register() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            value={email}
-            type="username"
-            placeholder="Enter email"
-            onChange={handleChangeEmail}
-          />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else (except Rather).
-          </Form.Text>
-        </Form.Group>
-
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -82,15 +75,15 @@ function Register() {
         </Form.Group>
 
         {error && (
-          <Alert variant="danger">User already exists.</Alert>
+          <Alert variant="danger">Username or password is incorrect.</Alert>
         )}
 
-        <Button variant="primary" type="submit" onClick={tryRegister}>
-          Register
+        <Button variant="primary" type="submit" onClick={tryLogin}>
+          Log in
         </Button>
       </Form>
     </div>
   );
 }
 
-export default Register;
+export default Login;
