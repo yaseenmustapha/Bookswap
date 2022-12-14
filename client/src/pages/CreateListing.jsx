@@ -10,6 +10,7 @@ function CreateListing() {
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleChangeTitle = (e) => {
     e.preventDefault(); // prevent the default action
@@ -103,6 +104,23 @@ function CreateListing() {
             onChange={handleChangeDescription}
           />
         </Form.Group>
+
+        {selectedImage && (
+        <div>
+        <img alt="not found" width={"250px"} src={URL.createObjectURL(selectedImage)} />
+        <br />
+        <button onClick={()=>setSelectedImage(null)}>Remove</button>
+        </div>
+      )}
+
+<input
+        type="file"
+        name="myImage"
+        onChange={(event) => {
+          console.log(event.target.files[0]);
+          setSelectedImage(event.target.files[0]);
+        }}
+      />
 
         <Button variant="primary" type="submit" onClick={tryCreateListing}>
           Create listing
