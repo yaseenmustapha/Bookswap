@@ -9,6 +9,7 @@ function CreateListing() {
   const [title, setTitle] = useState();
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
+  const [condition, setCondition] = useState();
 
   const handleChangeTitle = (e) => {
     e.preventDefault(); // prevent the default action
@@ -25,12 +26,18 @@ function CreateListing() {
     setDescription(e.target.value); // set name to e.target.value (event)
   };
 
+  const handleChangeCondition = (e) => {
+    e.preventDefault(); //prevent the default action
+    setCondition(e.target.value); //set name to e.target.value (event)
+  };
+
   function tryCreateListing() {
     axios
       .post("/createlisting", {
         name: title,
         price: price,
         description: description,
+        condition: condition
       })
       .then(function (response) {
         console.log(response);
@@ -72,7 +79,18 @@ function CreateListing() {
             />
           </InputGroup>
         </Form.Group>
-
+      <br></br>
+        <Form.Group>
+          <Form.Control as="select"
+          onChange = {handleChangeCondition}
+           aria-label="Select condition of game">
+            <option value="0">New</option>
+            <option value="1">Like New</option>
+            <option value="2">Used</option>
+            <option value="3">Acceptable</option>
+          </Form.Control>
+        </Form.Group>
+      <br></br>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Description</Form.Label>
           <Form.Control
