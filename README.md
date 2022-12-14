@@ -1,4 +1,6 @@
-# gameswap
+# GameSwap
+
+Game trading web application built using FReMP stack (Flask, React.js, MongoDB, Python).
 
 ## Start Flask backend:
 ```
