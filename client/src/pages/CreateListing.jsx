@@ -106,21 +106,21 @@ function CreateListing() {
         </Form.Group>
 
         {selectedImage && (
-        <div>
-        <img alt="not found" width={"250px"} src={URL.createObjectURL(selectedImage)} />
-        <br />
-        <button onClick={()=>setSelectedImage(null)}>Remove</button>
-        </div>
-      )}
+          <div>
+            <img alt="not found" width={"250px"} src={URL.createObjectURL(selectedImage)} />
+            <br />
+            <button onClick={()=>setSelectedImage(null)}>Remove</button>
+          </div>
+        )}
 
-<input
-        type="file"
-        name="myImage"
-        onChange={(event) => {
-          console.log(event.target.files[0]);
-          setSelectedImage(event.target.files[0]);
-        }}
-      />
+        <input
+          type="file"
+          name="myImage"
+          onChange={(event) => {
+            console.log(event.target.files[0]);
+            setSelectedImage(event.target.files[0]);
+          }}
+        />
 
         <Button variant="primary" type="submit" onClick={tryCreateListing}>
           Create listing
