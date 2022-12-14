@@ -37,7 +37,7 @@ function CreateListing() {
         name: title,
         price: price,
         description: description,
-        condition: condition
+        condition: condition,
       })
       .then(function (response) {
         console.log(response);
@@ -79,18 +79,21 @@ function CreateListing() {
             />
           </InputGroup>
         </Form.Group>
-      <br></br>
-        <Form.Group>
-          <Form.Control as="select"
-          onChange = {handleChangeCondition}
-           aria-label="Select condition of game">
+
+        <Form.Group className="mb-3">
+          <Form.Label>Condition</Form.Label>
+          <Form.Control
+            as="select"
+            onChange={handleChangeCondition}
+            aria-label="Select condition of game"
+          >
             <option value="0">New</option>
             <option value="1">Like New</option>
             <option value="2">Used</option>
             <option value="3">Acceptable</option>
           </Form.Control>
         </Form.Group>
-      <br></br>
+
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Description</Form.Label>
           <Form.Control
