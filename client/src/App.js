@@ -13,10 +13,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/createlisting" element={<CreateListing />} />
       </Routes>
-      
-      
-    
-      
     </div>
   )
 }
