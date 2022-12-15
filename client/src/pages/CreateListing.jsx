@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import { useCookies } from "react-cookie";
+import Alert from "react-bootstrap/Alert";
 
 function CreateListing() {
   const [title, setTitle] = useState();
@@ -11,6 +13,8 @@ function CreateListing() {
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [cookies,] = useCookies(["jwt"]);
+  const [success, setSuccess] = useState(false);
 
   const handleChangeTitle = (e) => {
     e.preventDefault(); // prevent the default action
@@ -32,21 +36,27 @@ function CreateListing() {
     setCondition(e.target.value); //set name to e.target.value (event)
   };
 
-  function tryCreateListing() {
-    axios
-      .post("/createlisting", {
+  const tryCreateListing = async (e) => {
+    e.preventDefault();
+    try {
+      const responseProfile = await axios.get("/user", { headers: {Authorization: `Bearer ${cookies.jwt}`}});
+      console.log("PROFILE RESPONSE:", responseProfile);
+      const userId = responseProfile.data.profile.user_id;
+      const responseCreateListing = await axios.post("/createlisting", {
+        user_id: userId,
         name: title,
         price: price,
         description: description,
         condition: condition,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+      }, { headers: {Authorization: `Bearer ${cookies.jwt}`}});
+      console.log("Create listing response: ", responseCreateListing);
+      if (responseCreateListing.status === 202) setSuccess(true);
+    } catch (error) {
+      setSuccess(false);
+      console.log("Create listing error: ", error);
+    }
+
+  };
 
   return (
     <div>
@@ -121,6 +131,10 @@ function CreateListing() {
             setSelectedImage(event.target.files[0]);
           }}
         />
+
+        {success && (
+          <Alert variant="success">Listing created successfully.</Alert>
+        )}
 
         <Button variant="primary" type="submit" onClick={tryCreateListing}>
           Create listing

@@ -62,11 +62,12 @@ def login():
 
 # Create listing API route
 @app.route("/createlisting", methods=["POST"])
+@jwt_required( )
 def createlisting():
     new_listing = request.get_json() # store the json body request
     new_listing["listing_id"] = str(listings_collection.count_documents({}) + 1)
     listings_collection.insert_one(new_listing)
-    return jsonify({'msg': 'User created successfully'}), 201
+    return jsonify({'msg': 'Listing created successfully'}), 202
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
