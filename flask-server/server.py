@@ -85,13 +85,25 @@ def listing():
     user_id = args.get("user_id")
     return parse_json(listings_collection.find({ "user_id": user_id }))
 
-# Get listings that match
+# Get listings that match (with usernames fetched from user ID)
 @app.route("/searchlistings", methods=["GET"])
 def searchlistings():
     args = request.args
     search_term = args.get("search_term")
     listings_collection.create_index([("name", 'text')])
-    return parse_json(listings_collection.find({ "$text": { "$search": search_term } }))
+    search_results = parse_json(listings_collection.find({ "$text": { "$search": search_term } }))
+    for x in range(len(search_results)):
+        user_id = search_results[x]["user_id"]
+        username = parse_json(users_collection.find_one({"user_id" : user_id}))["username"]
+        search_results[x]["username"] = username
+    return search_results
+
+# Get username from user_id
+@app.route("/getusername", methods=["GET"])
+def getusername():
+    args = request.args
+    user_id = args.get("user_id")
+    return parse_json(users_collection.find_one({"user_id" : user_id}))
     
 if __name__ == "__main__":
     app.run(debug=True)
