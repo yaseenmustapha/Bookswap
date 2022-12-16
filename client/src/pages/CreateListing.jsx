@@ -18,7 +18,7 @@ function CreateListing() {
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState(null);
   const [cookies] = useCookies(["jwt"]);
   const [success, setSuccess] = useState(false);
   const awsConfig = {
@@ -48,15 +48,19 @@ function CreateListing() {
     setCondition(e.target.value); //set name to e.target.value (event)
   };
 
-  const uploadFile = async (file) => {
+  const uploadFiles = async (files) => {
     console.log("Starting upload");
     const ReactS3Client = new S3(awsConfig);
     // the name of the file uploaded is used to upload it to S3
     try {
-      const response = await ReactS3Client.uploadFile(file, file.name);
-      const imageUrl = response.location;
-      console.log("Uploaded image URL:", imageUrl);
-      return imageUrl;
+      let imageUrls = [];
+      console.log('0')
+      for (let i = 0; i < files.length; i++) {
+        const response = await ReactS3Client.uploadFile(files[i], files[i].name);
+        const imageUrl = response.location;
+        imageUrls.push(imageUrl);
+      }
+      return imageUrls;
     } catch (error) {
       console.log("File upload error:", error);
       return null;
@@ -82,8 +86,7 @@ function CreateListing() {
       console.log("PROFILE RESPONSE:", responseProfile);
       const userId = responseProfile.data.profile.user_id;
 
-      const imageUrl = await uploadFile(selectedImage);
-
+      const imageUrls = await uploadFiles(selectedImages);
       const responseCreateListing = await axios.post(
         "/createlisting",
         {
@@ -92,7 +95,7 @@ function CreateListing() {
           price: price,
           description: description,
           condition: condition,
-          img: [imageUrl],
+          img: imageUrls,
         },
         { headers: { Authorization: `Bearer ${cookies.jwt}` } }
       );
@@ -171,13 +174,15 @@ function CreateListing() {
                 <Form.Control
                   type="file"
                   onChange={(event) => {
-                    console.log(event.target.files[0]);
-                    setSelectedImage(event.target.files[0]);
+                    console.log(event.target.files);
+                    const chosenFiles = Array.prototype.slice.call(event.target.files);
+                    setSelectedImages(chosenFiles);
                   }}
+                  multiple
                 />
               </Form.Group>
 
-              {selectedImage && (
+              {/*selectedImage && (
                 <div>
                   <img
                     alt="not found"
@@ -193,7 +198,7 @@ function CreateListing() {
                     Remove
                   </button>
                 </div>
-              )}
+              )*/}
             </Col>
           </Row>
 
