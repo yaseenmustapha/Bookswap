@@ -46,3 +46,7 @@ Try http://localhost:3000 or http://127.0.0.1:3000 to test frontend.
 [Download MongoDB Compass](https://www.mongodb.com/try/download/compass)
 
 Use `mongodb+srv://gameswap:SO3v6uVCwfQqpzPS@cluster0.tupmdgp.mongodb.net/test` to connect (your external IP must be approved for Network Access before you can connect).
+
+## FAQ
+### Proxy error: Could not proxy request [API endpoint] from localhost:3000 to http://localhost:5000/ (ECONNREFUSED).
+Change `"proxy"` in `package.json` from `"http://localhost:5000"` to `"http://127.0.0.1:5000"`.
