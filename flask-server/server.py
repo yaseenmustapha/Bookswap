@@ -85,6 +85,10 @@ def listing():
     user_id = args.get("user_id")
     return parse_json(listings_collection.find({ "user_id": user_id }))
 
+# Search listings API route
+@app.route("/searchListings/", methods=["GET"])
+def searchListings():
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
