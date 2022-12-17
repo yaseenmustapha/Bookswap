@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
+import useAuthCookie from "../Utils/useAuthCookie";
 
 function Register() {
   let navigate = useNavigate();
@@ -12,6 +13,7 @@ function Register() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
+  const [,setAuthCookie] = useAuthCookie();
 
   const handleChangeUsername = (e) => {
     e.preventDefault(); // prevent the default action
@@ -37,6 +39,10 @@ function Register() {
         password: password,
       });
       console.log("Register response: ", response)
+      if (response.status === 201) {
+        setAuthCookie(username, response.data.access_token); // logs in user
+        navigate("/");
+      }
       if (response.status === 201) navigate("/");
     } catch (error) {
       console.log("Register error: ", error);

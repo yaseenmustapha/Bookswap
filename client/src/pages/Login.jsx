@@ -5,15 +5,14 @@ import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
-import { useCookies } from "react-cookie";
+import useAuthCookie from "../Utils/useAuthCookie";
 
 function Login() {
   let navigate = useNavigate();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
-  // const [cookies, setCookie] = useCookies(['jwt', 'username']);
-  const [, setCookie] = useCookies(["jwt", "username"]);
+  const [,setAuthCookie] = useAuthCookie();
 
   const handleChangeUsername = (e) => {
     e.preventDefault(); // prevent the default action
@@ -25,13 +24,6 @@ function Login() {
     setPassword(e.target.value); // set name to e.target.value (event)
   };
 
-  function createCookie(access_token) {
-    setCookie("jwt", access_token, { path: "/" });
-    setCookie("username", username, { path: "/" });
-    // setCookie("jwt", access_token, { path: "/", secure: true, httpOnly: true, sameSite: "lax" });
-    // setCookie("username", username, { path: "/", secure: true, httpOnly: true, sameSite: "lax" });
-  }
-
   const tryLogin = async (e) => {
     e.preventDefault();
     try {
@@ -41,7 +33,7 @@ function Login() {
       });
       console.log("Login response: ", response);
       if (response.status === 200) {
-        createCookie(response.data.access_token);
+        setAuthCookie(username, response.data.access_token); // logs in user
         navigate("/");
       }
     } catch (error) {

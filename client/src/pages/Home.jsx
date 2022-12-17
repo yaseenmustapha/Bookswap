@@ -2,12 +2,11 @@ import React from 'react';
 import Header from '../components/Header'
 import YourListings from '../components/YourListings'
 import SearchBar from '../components/SearchBar'
-import { useCookies } from 'react-cookie';
+import useAuthCookie from '../Utils/useAuthCookie';
 
 function Home() {
-    const [cookies,] = useCookies(["jwt", "username"]);
-    const isAuthenticated = !!cookies.jwt
-
+    const [isAuthenticated,] = useAuthCookie();
+    
     return (
         <div>
             <Header />
