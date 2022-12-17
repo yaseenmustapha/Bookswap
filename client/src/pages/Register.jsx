@@ -43,7 +43,6 @@ function Register() {
         setAuthCookie(username, response.data.access_token); // logs in user
         navigate("/");
       }
-      if (response.status === 201) navigate("/");
     } catch (error) {
       console.log("Register error: ", error);
       if (error.response.status === 409) setError(true);
