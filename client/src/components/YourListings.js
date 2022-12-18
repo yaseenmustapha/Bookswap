@@ -89,7 +89,7 @@ function YourListings() {
                   <Heading size="md">{listing.name}</Heading>
                   <Text>{listing.description}</Text>
                   <Text color="blue.600" fontSize="2xl">
-                    {Number(listing.price).toFixed(2)}
+                    ${Number(listing.price).toFixed(2)}
                   </Text>
                 </Stack>
               </CardBody>
