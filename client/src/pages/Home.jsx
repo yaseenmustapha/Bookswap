@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '../components/Header'
-import YourListings from '../components/YourListings'
-import SearchBar from '../components/SearchBar'
+import Header from '../Components/Header'
+import YourListings from '../Components/YourListings'
+import SearchBar from '../Components/SearchBar'
 import useAuthCookie from '../Utils/useAuthCookie';
 
 function Home() {
