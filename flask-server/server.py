@@ -69,7 +69,7 @@ def createlisting():
     listings_collection.insert_one(new_listing)
     return jsonify({'msg': 'Listing created successfully'}), 202
 
-@app.route("/deleteListing", methods=["GET"])
+@app.route("/deletelisting", methods=["GET"])
 @jwt_required( )
 def deletelisting():
     args = request.args

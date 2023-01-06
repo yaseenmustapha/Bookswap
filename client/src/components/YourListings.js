@@ -99,7 +99,27 @@ function YourListings() {
                   <Button variant="solid" colorScheme="blue">
                     Edit
                   </Button>
-                  <Button variant="ghost" colorScheme="red">
+                  <Button
+                    variant="ghost"
+                    colorScheme="red"
+                    onClick={() => {
+                      try {
+                        const response = axios.get(
+                          "/deletelisting",
+                          {
+                            params: { listing_id: listing.listing_id },
+                            headers: { Authorization: `Bearer ${cookies.jwt}` },
+                          }
+                        );
+                        console.log("Delete listing response: ", response);
+                        if (response.status === 203) {
+                          console.log("Listing successfully deleted");
+                        }
+                      } catch (error) {
+                        console.log("Delete listing error error: ", error);
+                      }
+                    }}
+                  >
                     Delete
                   </Button>
                 </ButtonGroup>
