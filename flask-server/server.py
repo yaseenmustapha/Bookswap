@@ -69,6 +69,14 @@ def createlisting():
     listings_collection.insert_one(new_listing)
     return jsonify({'msg': 'Listing created successfully'}), 202
 
+@app.route("/deleteListing", methods=["GET"])
+@jwt_required( )
+def deletelisting():
+    args = request.args
+    listing_id = args.get("listing_id")
+    listings_collection.delete_one({"listing_id": listing_id})
+    return jsonify({'msg': 'Listing deleted successfully'}), 203
+
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
