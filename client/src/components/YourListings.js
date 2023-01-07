@@ -23,6 +23,7 @@ function YourListings() {
   const [listings, setListings] = useState();
   const [cookies] = useCookies(["jwt", "username"]);
   const isAuthenticated = !!cookies.jwt;
+  const [listingDeleted, setListingDeleted] = useState(false);
 
   useEffect(() => {
     const getListingsForCurrentUser = async () => {
@@ -50,7 +51,30 @@ function YourListings() {
     if (isAuthenticated) {
       getListingsForCurrentUser();
     }
-  }, []);
+    if (listingDeleted) {
+      setListingDeleted(false);
+    }
+  }, [listingDeleted]);
+
+  const deleteListing = listingId => async e => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(
+        "/deletelisting",
+        {
+          params: { listing_id: listingId },
+          headers: { Authorization: `Bearer ${cookies.jwt}` },
+        }
+      );
+      console.log("Delete listing response: ", response);
+      if (response.status === 203) {
+        setListingDeleted(true);
+        console.log("Listing successfully deleted");
+      }
+    } catch (error) {
+      console.log("Delete listing error error: ", error);
+    }
+  }
 
   return (
     <>
@@ -75,7 +99,7 @@ function YourListings() {
         ) : (
           listings &&
           listings.map((listing, i) => (
-            <Card maxW="sm">
+            <Card maxW="sm" key={i}>
               <CardBody>
                 <Center>
                   <Image
@@ -102,23 +126,7 @@ function YourListings() {
                   <Button
                     variant="ghost"
                     colorScheme="red"
-                    onClick={() => {
-                      try {
-                        const response = axios.get(
-                          "/deletelisting",
-                          {
-                            params: { listing_id: listing.listing_id },
-                            headers: { Authorization: `Bearer ${cookies.jwt}` },
-                          }
-                        );
-                        console.log("Delete listing response: ", response);
-                        if (response.status === 203) {
-                          console.log("Listing successfully deleted");
-                        }
-                      } catch (error) {
-                        console.log("Delete listing error error: ", error);
-                      }
-                    }}
+                    onClick={deleteListing(listing.listing_id)}
                   >
                     Delete
                   </Button>
