@@ -4,6 +4,10 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.14",
+    "@chakra-ui/react": "^2.4.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -13,6 +17,7 @@
     "axios": "^1.2.1",
     "bootstrap": "^5.2.3",
     "buffer": "^6.0.3",
+    "framer-motion": "^7.10.2",
     "react": "^18.2.0",
     "react-aws-s3": "^1.5.0",
     "react-bootstrap": "^2.7.0",
