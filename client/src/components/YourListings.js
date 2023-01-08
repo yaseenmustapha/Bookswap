@@ -78,11 +78,13 @@ function YourListings() {
             <Card maxW="sm">
               <CardBody>
                 <Center>
-                  <Image
-                    src={listing.img[0]}
-                    alt={listing.name}
-                    borderRadius="lg"
-                  />
+                  {listing.img && (
+                    <Image
+                      src={listing.img[0]}
+                      alt={listing.name}
+                      borderRadius="lg"
+                    />
+                  )}
                 </Center>
 
                 <Stack mt="6" spacing="3">

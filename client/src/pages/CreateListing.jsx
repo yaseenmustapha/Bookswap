@@ -1,32 +1,48 @@
 import React, { useState } from "react";
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import Header from "../Components/Header";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import Alert from "react-bootstrap/Alert";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import S3 from "react-aws-s3";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  Button,
+  Alert,
+  AlertIcon,
+  InputLeftAddon,
+  Select,
+  Textarea,
+  SimpleGrid,
+  Stack,
+} from "@chakra-ui/react";
 
 window.Buffer = window.Buffer || require("buffer").Buffer;
+
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+
+const awsConfig = {
+  bucketName: "gameswap-dev",
+  region: "us-west-2",
+  accessKeyId: "AKIATVPHJTV5NI4FHSKI",
+  secretAccessKey: "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",
+};
 
 function CreateListing() {
   const [title, setTitle] = useState();
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
-  const [selectedImages, setSelectedImages] = useState(null);
+  const [images, setImages] = useState(null);
   const [cookies] = useCookies(["jwt"]);
   const [success, setSuccess] = useState(false);
-  const awsConfig = {
-    bucketName: "gameswap-dev",
-    region: "us-west-2",
-    accessKeyId: "AKIATVPHJTV5NI4FHSKI",
-    secretAccessKey: "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",
-  };
 
   const handleChangeTitle = (e) => {
     e.preventDefault(); // prevent the default action
@@ -54,9 +70,12 @@ function CreateListing() {
     // the name of the file uploaded is used to upload it to S3
     try {
       let imageUrls = [];
-      console.log('0')
+      console.log("files", files);
       for (let i = 0; i < files.length; i++) {
-        const response = await ReactS3Client.uploadFile(files[i], files[i].name);
+        const response = await ReactS3Client.uploadFile(
+          files[i].file,
+          files[i].filename
+        );
         const imageUrl = response.location;
         imageUrls.push(imageUrl);
       }
@@ -86,7 +105,7 @@ function CreateListing() {
       console.log("PROFILE RESPONSE:", responseProfile);
       const userId = responseProfile.data.profile.user_id;
 
-      const imageUrls = await uploadFiles(selectedImages);
+      const imageUrls = await uploadFiles(images);
       const responseCreateListing = await axios.post(
         "/createlisting",
         {
@@ -110,107 +129,75 @@ function CreateListing() {
   return (
     <>
       <Header></Header>
-      <Container>
-        <Form style={{ paddingTop: "40px" }}>
-          <Row>
-            <Col md={6}>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  value={title}
-                  placeholder="Enter title"
-                  onChange={handleChangeTitle}
-                />
-                <Form.Text className="text-muted">
-                  Enter a descriptive title.
-                </Form.Text>
-              </Form.Group>
+      <form onSubmit={tryCreateListing} style={{ paddingTop: "30px" }}>
+        <SimpleGrid columns={2} spacing={10} px={10}>
+          <Box>
+            <Stack spacing={4}>
+              <FormControl onChange={handleChangeTitle} isRequired>
+                <FormLabel>Title</FormLabel>
+                <Input type="text" />
+              </FormControl>
 
-              <Form.Group
-                style={{ width: "150px" }}
-                className="mb-3"
-                controlId="formBasicEmail"
-              >
-                <Form.Label>Price</Form.Label>
+              <FormControl onChange={handleChangePrice} isRequired>
+                <FormLabel>Price</FormLabel>
                 <InputGroup>
-                  <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-
-                  <Form.Control
-                    value={price}
-                    placeholder="00.00"
-                    onChange={handleChangePrice}
-                  />
+                  <InputLeftAddon children="$" />
+                  <Input placeholder="00.00" type="text" />
                 </InputGroup>
-              </Form.Group>
+              </FormControl>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Condition</Form.Label>
-                <Form.Control
-                  as="select"
-                  onChange={handleChangeCondition}
-                  aria-label="Select condition of game"
-                >
+              <FormControl onChange={handleChangeCondition} isRequired>
+                <FormLabel>Condition</FormLabel>
+                <Select placeholder="Select condition">
                   <option value="0">New</option>
                   <option value="1">Like New</option>
                   <option value="2">Used</option>
                   <option value="3">Acceptable</option>
-                </Form.Control>
-              </Form.Group>
+                </Select>
+              </FormControl>
 
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  value={description}
-                  as="textarea"
-                  placeholder="Enter a description"
-                  onChange={handleChangeDescription}
-                />
-              </Form.Group>
-            </Col>
+              <FormControl onChange={handleChangeDescription} isRequired>
+                <FormLabel>Description</FormLabel>
+                <Textarea />
+              </FormControl>
 
-            <Col md={6}>
-              <Form.Group controlId="formFile" className="mb-3">
-                <Form.Label>Choose an image to upload:</Form.Label>
-                <Form.Control
-                  type="file"
-                  onChange={(event) => {
-                    console.log(event.target.files);
-                    const chosenFiles = Array.prototype.slice.call(event.target.files);
-                    setSelectedImages(chosenFiles);
-                  }}
-                  multiple
-                />
-              </Form.Group>
+              {success && (
+                <Alert status="success">
+                  <AlertIcon />
+                  Listing created successfully
+                </Alert>
+              )}
 
-              {/*selectedImage && (
-                <div>
-                  <img
-                    alt="not found"
-                    width={"250px"}
-                    src={URL.createObjectURL(selectedImage)}
-                  />
-                  <br />
-                  <button
-                    className="btn btn-outline-danger"
-                    style={{ marginTop: "15px" }}
-                    onClick={() => setSelectedImage(null)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              )*/}
-            </Col>
-          </Row>
+              <Button
+                colorScheme="blue"
+                type="submit"
+                onClick={tryCreateListing}
+              >
+                Create listing
+              </Button>
+            </Stack>
+          </Box>
 
-          {success && (
-            <Alert variant="success">Listing created successfully.</Alert>
-          )}
-
-          <Button variant="primary" type="submit" onClick={tryCreateListing}>
-            Create listing
-          </Button>
-        </Form>
-      </Container>
+          <Box pt={5}>
+            <FilePond
+              files={images}
+              onupdatefiles={setImages}
+              allowMultiple={true}
+              maxFiles={5}
+              acceptedFileTypes={[
+                "image/jpg",
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+              ]}
+              instantUpload={false}
+              server={null}
+              name="files"
+              labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+            />
+          </Box>
+        </SimpleGrid>
+      </form>
     </>
   );
 }
