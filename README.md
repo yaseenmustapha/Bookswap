@@ -1,6 +1,6 @@
-# GameSwap
+# BookSwap
 
-Game trading full-stack web application built using React.js, Python, Flask, and MongoDB.
+Full-stack web application for trading and selling used textbooks built using React.js, Python, Flask, and MongoDB.
 
 ## Start Flask backend:
 ### 1. Create venv:
