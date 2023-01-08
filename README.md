@@ -1,6 +1,6 @@
 # GameSwap
 
-Game trading web application built using FReMP stack (Flask, React.js, MongoDB, Python).
+Game trading full-stack web application built using React.js, Python, Flask, and MongoDB.
 
 ## Start Flask backend:
 ### 1. Create venv:
