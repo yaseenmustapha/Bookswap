@@ -75,7 +75,7 @@ export default function Header() {
               color: linkHoverColor,
             }}
           >
-          <Image h="10" src={require("../Images/gameswap_logo.png")} />
+          <Image h="10" src={require("../Images/bookswap_logo.png")} />
           </Link>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />

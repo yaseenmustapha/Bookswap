@@ -72,7 +72,7 @@ function Login() {
               Log in
             </Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-              to sell and trade your games 👋
+              to sell and trade your books 👋
             </Text>
           </Stack>
           <form onSubmit={tryLogin}>
