@@ -193,7 +193,7 @@ function CreateListing() {
               instantUpload={false}
               server={null}
               name="files"
-              labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+              labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
             />
           </Box>
         </SimpleGrid>

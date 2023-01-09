@@ -79,7 +79,7 @@ function Register() {
               Sign up
             </Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-              to start selling and trading games ✌️
+              to start selling and trading books ✌️
             </Text>
           </Stack>
           <form onSubmit={tryRegister}>
