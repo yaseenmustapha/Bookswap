@@ -90,6 +90,7 @@ function YourListings() {
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+        paddingInline={10}
       >
         {!listings && <p>Loading listings...</p>}
         {listings && listings.length === 0 ? (
