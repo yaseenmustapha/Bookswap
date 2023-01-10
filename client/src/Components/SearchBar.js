@@ -63,6 +63,7 @@ function SearchBar() {
                 direction={{ base: "column", sm: "row" }}
                 overflow="hidden"
                 variant="outline"
+                key={i}
               >
                 <Image
                   objectFit="cover"

@@ -46,6 +46,23 @@ function Register() {
     setPassword(e.target.value); // set name to e.target.value (event)
   };
 
+  const tryLogin = async (user, pass) => {
+    try {
+      const response = await axios.post("/login", {
+        username: user,
+        password: pass,
+      });
+      console.log("Login response: ", response);
+      if (response.status === 200) {
+        setAuthCookie(username, response.data.access_token); // logs in user
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("Login error: ", error);
+      if (error.response.status === 401) setError(true);
+    }
+  };
+
   const tryRegister = async (e) => {
     e.preventDefault();
     try {
@@ -56,8 +73,7 @@ function Register() {
       });
       console.log("Register response: ", response);
       if (response.status === 201) {
-        setAuthCookie(username, response.data.access_token); // logs in user
-        navigate("/");
+        await tryLogin(username, password);
       }
     } catch (error) {
       console.log("Register error: ", error);
