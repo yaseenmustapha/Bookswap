@@ -28,7 +28,7 @@ function YourListings() {
   useEffect(() => {
     const getListingsForCurrentUser = async () => {
       try {
-        const responseProfile = await axios.get("/user", {
+        const responseProfile = await axios.get(process.env.REACT_APP_API_BASE + "/user", {
           headers: { Authorization: `Bearer ${cookies.jwt}` },
         });
         console.log(
@@ -37,7 +37,7 @@ function YourListings() {
         );
         if (responseProfile.status === 200) {
           const user_id = responseProfile.data.profile._id;
-          const responseListings = await axios.get("/listings", {
+          const responseListings = await axios.get(process.env.REACT_APP_API_BASE + "/listings", {
             params: { user_id },
           });
           console.log("Listings response", responseListings);
@@ -60,7 +60,7 @@ function YourListings() {
     e.preventDefault();
     try {
       const response = await axios.get(
-        "/deletelisting",
+        process.env.REACT_APP_API_BASE + "/deletelisting",
         {
           params: { listing_id: listingId },
           headers: { Authorization: `Bearer ${cookies.jwt}` },

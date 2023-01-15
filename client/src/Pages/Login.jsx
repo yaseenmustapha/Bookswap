@@ -43,7 +43,7 @@ function Login() {
   const tryLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/login", {
+      const response = await axios.post(process.env.REACT_APP_API_BASE + "login", {
         username: username,
         password: password,
       });

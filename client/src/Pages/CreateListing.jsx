@@ -105,7 +105,7 @@ function CreateListing() {
   const tryCreateListing = async (e) => {
     e.preventDefault();
     try {
-      const responseProfile = await axios.get("/user", {
+      const responseProfile = await axios.get(process.env.REACT_APP_API_BASE + "/user", {
         headers: { Authorization: `Bearer ${cookies.jwt}` },
       });
       console.log("PROFILE RESPONSE:", responseProfile);
@@ -113,7 +113,7 @@ function CreateListing() {
 
       const imageUrls = await uploadFiles(images);
       const responseCreateListing = await axios.post(
-        "/createlisting",
+        process.env.REACT_APP_API_BASE + "/createlisting",
         {
           user_id: userId,
           name: title,
