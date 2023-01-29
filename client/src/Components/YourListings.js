@@ -36,7 +36,7 @@ function YourListings() {
           responseProfile.data.profile
         );
         if (responseProfile.status === 200) {
-          const user_id = responseProfile.data.profile.user_id;
+          const user_id = responseProfile.data.profile._id;
           const responseListings = await axios.get("/listings", {
             params: { user_id },
           });
@@ -90,6 +90,7 @@ function YourListings() {
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+        paddingInline={10}
       >
         {!listings && <p>Loading listings...</p>}
         {listings && listings.length === 0 ? (
@@ -128,7 +129,7 @@ function YourListings() {
                   <Button
                     variant="ghost"
                     colorScheme="red"
-                    onClick={deleteListing(listing.listing_id)}
+                    onClick={deleteListing(listing._id)}
                   >
                     Delete
                   </Button>

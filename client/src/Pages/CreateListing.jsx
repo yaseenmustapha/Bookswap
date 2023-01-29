@@ -37,6 +37,7 @@ const awsConfig = {
 
 function CreateListing() {
   const [title, setTitle] = useState();
+  const [isbn, setIsbn] = useState();
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
@@ -47,6 +48,11 @@ function CreateListing() {
   const handleChangeTitle = (e) => {
     e.preventDefault(); // prevent the default action
     setTitle(e.target.value); // set name to e.target.value (event)
+  };
+
+  const handleChangeIsbn = (e) => {
+    e.preventDefault(); // prevent the default action
+    setIsbn(e.target.value); // set name to e.target.value (event)
   };
 
   const handleChangePrice = (e) => {
@@ -103,7 +109,7 @@ function CreateListing() {
         headers: { Authorization: `Bearer ${cookies.jwt}` },
       });
       console.log("PROFILE RESPONSE:", responseProfile);
-      const userId = responseProfile.data.profile.user_id;
+      const userId = responseProfile.data.profile._id;
 
       const imageUrls = await uploadFiles(images);
       const responseCreateListing = await axios.post(
@@ -111,6 +117,7 @@ function CreateListing() {
         {
           user_id: userId,
           name: title,
+          isbn: isbn,
           price: price,
           description: description,
           condition: condition,
@@ -138,6 +145,11 @@ function CreateListing() {
                 <Input type="text" />
               </FormControl>
 
+              <FormControl onChange={handleChangeIsbn} isRequired>
+                <FormLabel>ISBN</FormLabel>
+                <Input type="text" />
+              </FormControl>
+
               <FormControl onChange={handleChangePrice} isRequired>
                 <FormLabel>Price</FormLabel>
                 <InputGroup>
@@ -156,7 +168,7 @@ function CreateListing() {
                 </Select>
               </FormControl>
 
-              <FormControl onChange={handleChangeDescription} isRequired>
+              <FormControl onChange={handleChangeDescription}>
                 <FormLabel>Description</FormLabel>
                 <Textarea />
               </FormControl>

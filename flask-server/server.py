@@ -5,6 +5,7 @@ from bson import json_util
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
@@ -25,7 +26,6 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1) # define the
 @app.route("/user", methods=["POST"])
 def register():
     new_user = request.get_json() # store the json body request
-    new_user["user_id"] = str(users_collection.count_documents({}) + 1)
     new_user["password"] = hashlib.sha256(new_user["password"].encode("utf-8")).hexdigest() # encrypt password
     doc = users_collection.find_one({"username": new_user["username"]}) # check if user exist
     if not doc:
@@ -41,7 +41,8 @@ def profile():
     current_user = get_jwt_identity() # Get the identity of the current user
     user_from_db = users_collection.find_one({'username' : current_user})
     if user_from_db:
-        del user_from_db['_id'], user_from_db['password'] # delete data we don't want to return
+        user_from_db['_id'] = str(user_from_db['_id'])
+        del user_from_db['password'] # delete data we don't want to return
         return jsonify({'profile' : user_from_db }), 200
     else:
         return jsonify({'msg': 'Profile not found'}), 404
@@ -65,7 +66,7 @@ def login():
 @jwt_required( )
 def createlisting():
     new_listing = request.get_json() # store the json body request
-    new_listing["listing_id"] = str(listings_collection.count_documents({}) + 1)
+    new_listing["user_id"] = ObjectId(new_listing["user_id"])
     listings_collection.insert_one(new_listing)
     return jsonify({'msg': 'Listing created successfully'}), 202
 
@@ -73,8 +74,8 @@ def createlisting():
 @jwt_required( )
 def deletelisting():
     args = request.args
-    listing_id = args.get("listing_id")
-    listings_collection.delete_one({"listing_id": listing_id})
+    listing_id = args.get("_id")
+    listings_collection.delete_one({"_id": listing_id})
     return jsonify({'msg': 'Listing deleted successfully'}), 203
 
 def parse_json(data):
@@ -91,7 +92,7 @@ def members():
 def listing():
     args = request.args
     user_id = args.get("user_id")
-    return parse_json(listings_collection.find({ "user_id": user_id }))
+    return parse_json(listings_collection.find({ "user_id": ObjectId(user_id) }))
 
 # Get listings that match (with usernames fetched from user ID)
 @app.route("/searchlistings", methods=["GET"])
@@ -101,8 +102,8 @@ def searchlistings():
     listings_collection.create_index([("name", 'text')])
     search_results = parse_json(listings_collection.find({ "$text": { "$search": search_term } }))
     for x in range(len(search_results)):
-        user_id = search_results[x]["user_id"]
-        username = parse_json(users_collection.find_one({"user_id" : user_id}))["username"]
+        user_id = search_results[x]["user_id"]["$oid"]
+        username = parse_json(users_collection.find_one({"_id" : ObjectId(user_id)}))["username"]
         search_results[x]["username"] = username
     return search_results
 
@@ -111,7 +112,7 @@ def searchlistings():
 def getusername():
     args = request.args
     user_id = args.get("user_id")
-    return parse_json(users_collection.find_one({"user_id" : user_id}))
+    return parse_json(users_collection.find_one({"_id" : ObjectId(user_id)}))
     
 if __name__ == "__main__":
     app.run(debug=True)
