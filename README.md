@@ -1,4 +1,4 @@
-# BookSwap
+# Bookswap
 
 Full-stack web application for trading and selling used textbooks built using React.js, Python, Flask, and MongoDB.
 
@@ -20,7 +20,7 @@ venv\Scripts\activate
 
 ### 3. Install Python modules:
 ```
-pip3 install Flask pymongo flask_jwt_extended
+pip3 install Flask pymongo flask_jwt_extended flask_cors
 ```
 ### 4. Start server:
 Mac:

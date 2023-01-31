@@ -6,7 +6,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import Header from "../Components/Header";
 import axios from "axios";
-import { useCookies } from "react-cookie";
+import { useAuth } from "../Hooks/useAuth";
 import S3 from "react-aws-s3";
 import {
   Box,
@@ -29,10 +29,10 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const awsConfig = {
-  bucketName: "gameswap-dev",
-  region: "us-west-2",
-  accessKeyId: "AKIATVPHJTV5NI4FHSKI",
-  secretAccessKey: "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",
+  bucketName: process.env.REACT_APP_AWS_BUCKET_NAME,
+  region: process.env.REACT_APP_AWS_REGION,
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_ID,
+  secretAccessKey: process.env.REACT_APP_AWS_ACCESS_KEY,
 };
 
 function CreateListing() {
@@ -42,7 +42,7 @@ function CreateListing() {
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
   const [images, setImages] = useState(null);
-  const [cookies] = useCookies(["jwt"]);
+  const {token} = useAuth();
   const [success, setSuccess] = useState(false);
 
   const handleChangeTitle = (e) => {
@@ -105,15 +105,15 @@ function CreateListing() {
   const tryCreateListing = async (e) => {
     e.preventDefault();
     try {
-      const responseProfile = await axios.get("/user", {
-        headers: { Authorization: `Bearer ${cookies.jwt}` },
+      const responseProfile = await axios.get(process.env.REACT_APP_API_BASE + "/user", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       console.log("PROFILE RESPONSE:", responseProfile);
       const userId = responseProfile.data.profile._id;
 
       const imageUrls = await uploadFiles(images);
       const responseCreateListing = await axios.post(
-        "/createlisting",
+        process.env.REACT_APP_API_BASE + "/createlisting",
         {
           user_id: userId,
           name: title,
@@ -123,7 +123,7 @@ function CreateListing() {
           condition: condition,
           img: imageUrls,
         },
-        { headers: { Authorization: `Bearer ${cookies.jwt}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log("Create listing response: ", responseCreateListing);
       if (responseCreateListing.status === 202) setSuccess(true);

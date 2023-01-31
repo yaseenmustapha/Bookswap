@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Header from "../Components/Header";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useAuthCookie from "../Utils/useAuthCookie";
+import { useAuth } from "../Hooks/useAuth";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -29,7 +28,7 @@ function Register() {
   const [password, setPassword] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
-  const [, setAuthCookie] = useAuthCookie();
+  const auth = useAuth();
 
   const handleChangeUsername = (e) => {
     e.preventDefault(); // prevent the default action
@@ -46,38 +45,16 @@ function Register() {
     setPassword(e.target.value); // set name to e.target.value (event)
   };
 
-  const tryLogin = async (user, pass) => {
-    try {
-      const response = await axios.post("/login", {
-        username: user,
-        password: pass,
-      });
-      console.log("Login response: ", response);
-      if (response.status === 200) {
-        setAuthCookie(username, response.data.access_token); // logs in user
-        navigate("/");
-      }
-    } catch (error) {
-      console.log("Login error: ", error);
-      if (error.response.status === 401) setError(true);
-    }
-  };
-
   const tryRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/user", {
-        username: username,
-        email: email,
-        password: password,
-      });
-      console.log("Register response: ", response);
-      if (response.status === 201) {
-        await tryLogin(username, password);
+      const registerResponse = await auth.register(username, email, password);
+      if (registerResponse === 201) {
+        const loginResponse = await auth.login(username, password);
+        if (loginResponse === 200) navigate("/");
       }
-    } catch (error) {
-      console.log("Register error: ", error);
-      if (error.response.status === 409) setError(true);
+    } catch {
+      setError(true);
     }
   };
 

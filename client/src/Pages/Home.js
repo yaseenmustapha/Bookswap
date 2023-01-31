@@ -2,10 +2,10 @@ import React from 'react';
 import Header from '../Components/Header'
 import YourListings from '../Components/YourListings'
 import SearchBar from '../Components/SearchBar'
-import useAuthCookie from '../Utils/useAuthCookie';
+import { useAuth } from '../Hooks/useAuth';
 
 function Home() {
-    const [isAuthenticated,] = useAuthCookie();
+    const {isAuthenticated} = useAuth()
     
     return (
         <div>
