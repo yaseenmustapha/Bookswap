@@ -29,7 +29,7 @@ function SearchBar() {
   const trySearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get("/searchlistings", {
+      const response = await axios.get(process.env.REACT_APP_API_BASE + "/searchlistings", {
         params: { search_term: search },
       });
       console.log("search result: ", response.data);
@@ -49,7 +49,7 @@ function SearchBar() {
                 pointerEvents="none"
                 children={<SearchIcon color="gray.300" />}
               />
-              <Input placeholder="Search for a game..." />
+              <Input placeholder="Search for a book..." />
             </InputGroup>
           </Center>
         </FormControl>

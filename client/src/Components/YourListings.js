@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useCookies } from "react-cookie";
+import { useAuth } from "../Hooks/useAuth";
 import {
   Box,
   Button,
@@ -21,15 +21,14 @@ import {
 
 function YourListings() {
   const [listings, setListings] = useState();
-  const [cookies] = useCookies(["jwt", "username"]);
-  const isAuthenticated = !!cookies.jwt;
+  const {isAuthenticated, token} = useAuth();
   const [listingDeleted, setListingDeleted] = useState(false);
 
   useEffect(() => {
     const getListingsForCurrentUser = async () => {
       try {
-        const responseProfile = await axios.get("/user", {
-          headers: { Authorization: `Bearer ${cookies.jwt}` },
+        const responseProfile = await axios.get(process.env.REACT_APP_API_BASE + "/user", {
+          headers: { Authorization: `Bearer ${token}` },
         });
         console.log(
           "Get user profile response: ",
@@ -37,7 +36,7 @@ function YourListings() {
         );
         if (responseProfile.status === 200) {
           const user_id = responseProfile.data.profile._id;
-          const responseListings = await axios.get("/listings", {
+          const responseListings = await axios.get(process.env.REACT_APP_API_BASE + "/listings", {
             params: { user_id },
           });
           console.log("Listings response", responseListings);
@@ -60,10 +59,10 @@ function YourListings() {
     e.preventDefault();
     try {
       const response = await axios.get(
-        "/deletelisting",
+        process.env.REACT_APP_API_BASE + "/deletelisting",
         {
           params: { listing_id: listingId },
-          headers: { Authorization: `Bearer ${cookies.jwt}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       console.log("Delete listing response: ", response);

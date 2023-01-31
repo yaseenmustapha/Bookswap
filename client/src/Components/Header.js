@@ -1,4 +1,4 @@
-import { useCookies } from "react-cookie";
+import { useAuth } from "../Hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -28,15 +28,14 @@ import {
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
-  const [cookies, , removeCookie] = useCookies(["jwt", "username"]);
-  const isAuthenticated = !!cookies.jwt;
+  const {isAuthenticated, currentUser, logout} = useAuth();
 
   const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
 
-  const logout = (e) => {
-    removeCookie("jwt", { path: "/" });
-    removeCookie("username", { path: "/" });
+  const tryLogout = (e) => {
+    e.preventDefault();
+    logout();
     navigate("/");
   };
 
@@ -101,7 +100,7 @@ export default function Header() {
                     color: linkHoverColor,
                   }}
                 >
-                  Welcome, {cookies.username}
+                  Welcome, {currentUser}
                 </Link>
               </Center>
               <Link href={"/createlisting"} _hover={{ textDecoration: "none" }}>
@@ -124,7 +123,7 @@ export default function Header() {
                 fontSize={"sm"}
                 fontWeight={400}
                 variant={"link"}
-                onClick={logout}
+                onClick={tryLogout}
               >
                 Log Out
               </Button>

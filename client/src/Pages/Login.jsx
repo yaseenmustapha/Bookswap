@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Header from "../Components/Header";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useAuthCookie from "../Utils/useAuthCookie";
+import { useAuth } from "../Hooks/useAuth";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -28,7 +27,7 @@ function Login() {
   const [password, setPassword] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
-  const [,setAuthCookie] = useAuthCookie();
+  const auth = useAuth();
 
   const handleChangeUsername = (e) => {
     e.preventDefault(); // prevent the default action
@@ -43,29 +42,17 @@ function Login() {
   const tryLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/login", {
-        username: username,
-        password: password,
-      });
-      console.log("Login response: ", response);
-      if (response.status === 200) {
-        setAuthCookie(username, response.data.access_token); // logs in user
-        navigate("/");
-      }
-    } catch (error) {
-      console.log("Login error: ", error);
-      if (error.response.status === 401) setError(true);
+      const responseStatus = await auth.login(username, password);
+      if (responseStatus === 200) navigate("/");
+    } catch {
+      setError(true);
     }
   };
 
   return (
     <>
       <Header></Header>
-      <Flex
-        minH={"10vh"}
-        align={"center"}
-        justify={"center"}
-      >
+      <Flex minH={"10vh"} align={"center"} justify={"center"}>
         <Stack spacing={8} mx={"auto"} w={"500px"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
             <Heading fontSize={"4xl"} textAlign={"center"}>
