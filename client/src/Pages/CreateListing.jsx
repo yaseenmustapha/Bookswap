@@ -29,10 +29,10 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const awsConfig = {
-  bucketName: "gameswap-dev",
-  region: "us-west-2",
-  accessKeyId: "AKIATVPHJTV5NI4FHSKI",
-  secretAccessKey: "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",
+  bucketName: process.env.REACT_APP_AWS_BUCKET_NAME,
+  region: process.env.REACT_APP_AWS_REGION,
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_ID,
+  secretAccessKey: process.env.REACT_APP_AWS_ACCESS_KEY,
 };
 
 function CreateListing() {
