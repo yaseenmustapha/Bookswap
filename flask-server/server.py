@@ -76,8 +76,8 @@ def createlisting():
 @jwt_required( )
 def deletelisting():
     args = request.args
-    listing_id = args.get("_id")
-    listings_collection.delete_one({"_id": listing_id})
+    listing_id = args.get("listing_id")
+    listings_collection.delete_one({"_id": ObjectId(listing_id)})
     return jsonify({'msg': 'Listing deleted successfully'}), 203
 
 def parse_json(data):

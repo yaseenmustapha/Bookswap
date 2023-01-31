@@ -61,7 +61,7 @@ function YourListings() {
       const response = await axios.get(
         process.env.REACT_APP_API_BASE + "/deletelisting",
         {
-          params: { listing_id: listingId },
+          params: { listing_id: listingId.$oid },
           headers: { Authorization: `Bearer ${token}` },
         }
       );
