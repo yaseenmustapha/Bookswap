@@ -66,7 +66,7 @@ def login():
 # Create listing API route
 @app.route("/createlisting", methods=["POST"])
 @jwt_required( )
-def createlisting():
+def create_listing():
     new_listing = request.get_json() # store the json body request
     new_listing["user_id"] = ObjectId(new_listing["user_id"])
     listings_collection.insert_one(new_listing)
@@ -74,7 +74,7 @@ def createlisting():
 
 @app.route("/deletelisting", methods=["GET"])
 @jwt_required( )
-def deletelisting():
+def delete_listing():
     args = request.args
     listing_id = args.get("listing_id")
     listings_collection.delete_one({"_id": ObjectId(listing_id)})
@@ -98,7 +98,7 @@ def listing():
 
 # Get listings that match (with usernames fetched from user ID)
 @app.route("/searchlistings", methods=["GET"])
-def searchlistings():
+def search_listings():
     args = request.args
     search_term = args.get("search_term")
     listings_collection.create_index([("name", 'text')])
@@ -111,10 +111,17 @@ def searchlistings():
 
 # Get username from user_id
 @app.route("/getusername", methods=["GET"])
-def getusername():
+def get_username():
     args = request.args
     user_id = args.get("user_id")
     return parse_json(users_collection.find_one({"_id" : ObjectId(user_id)}))
     
 if __name__ == "__main__":
     app.run(debug=True)
+
+#Get book from ISBN? 
+@app.route("/get_book", methods=["GET"])
+def get_books(isbn13):
+    args = request.args
+    isbn13 = args.get("isbn13")
+    return parse_json(listings_collection.find_one({"isbn13" : int(isbn13)}))
