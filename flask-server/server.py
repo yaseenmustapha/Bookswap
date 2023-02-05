@@ -115,13 +115,14 @@ def get_username():
     args = request.args
     user_id = args.get("user_id")
     return parse_json(users_collection.find_one({"_id" : ObjectId(user_id)}))
-    
-if __name__ == "__main__":
-    app.run(debug=True)
 
 #Get book from ISBN? 
-@app.route("/get_book", methods=["GET"])
+@app.route("/getbook", methods=["GET"])
 def get_books(isbn13):
     args = request.args
     isbn13 = args.get("isbn13")
     return parse_json(listings_collection.find_one({"isbn13" : int(isbn13)}))
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
