@@ -99,20 +99,21 @@ function YourListings() {
         ) : (
           listings &&
           listings.map((listing, i) => (
-            <Card maxW="sm" key={i}>
+            <Card maxW="xs" key={i}>
               <CardBody>
                 <Center>
                   {listing.img && (
                     <Image
                       src={listing.img[0]}
-                      alt={listing.name}
+                      alt={listing.title}
                       borderRadius="lg"
                     />
                   )}
                 </Center>
 
                 <Stack mt="6" spacing="3">
-                  <Heading size="md">{listing.name}</Heading>
+                  <Heading size="md">{listing.title}</Heading>
+                  <Text>ISBN: {listing.isbn}</Text>
                   <Text>{listing.description}</Text>
                   <Text color="blue.600" fontSize="2xl">
                     ${Number(listing.price).toFixed(2)}

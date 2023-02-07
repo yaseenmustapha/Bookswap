@@ -69,13 +69,13 @@ function SearchBar() {
                   objectFit="cover"
                   maxW={{ base: "100%", sm: "200px" }}
                   src={searchResult.img}
-                  alt={searchResult.name}
+                  alt={searchResult.title}
                 />
 
                 <Stack>
                   <CardBody>
-                    <Heading size="md">{searchResult.name}</Heading>
-
+                    <Heading size="md">{searchResult.title}</Heading>
+                    <Text>ISBN: {searchResult.isbn}</Text>
                     <Text fontSize="2xl" py="2">
                       ${searchResult.price}
                     </Text>

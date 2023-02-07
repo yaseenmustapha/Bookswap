@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 
 function Register() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
