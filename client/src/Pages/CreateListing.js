@@ -205,7 +205,7 @@ function CreateListing() {
                 <FormLabel>Book Title</FormLabel>
                 <AsyncCreatableSelect
                   placeholder="Title of your book"
-                  // value={{ value: title, label: title }}
+                  value={{ value: title, label: title }}
                   loadOptions={loadOptions}
                   onInputChange={handleChangeTitle}
                   onChange={handleSelectTitle}
