@@ -8,6 +8,7 @@ import Header from "../Components/Header";
 import axios from "axios";
 import { useAuth } from "../Hooks/useAuth";
 import S3 from "react-aws-s3";
+import { AsyncCreatableSelect } from "chakra-react-select";
 import {
   Box,
   FormControl,
@@ -22,7 +23,11 @@ import {
   Textarea,
   SimpleGrid,
   Stack,
+  Text,
+  Image,
+  InputRightElement,
 } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
 
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
@@ -42,17 +47,73 @@ function CreateListing() {
   const [description, setDescription] = useState();
   const [condition, setCondition] = useState();
   const [images, setImages] = useState(null);
-  const {token} = useAuth();
+  const { token } = useAuth();
   const [success, setSuccess] = useState(false);
+  const [bookResponse, setBookResponse] = useState();
+  const [authors, setAuthors] = useState([]);
 
-  const handleChangeTitle = (e) => {
-    e.preventDefault(); // prevent the default action
-    setTitle(e.target.value); // set name to e.target.value (event)
+  const handleChangeTitle = (input) => {
+    if (input && input !== "") setTitle(input);
   };
 
-  const handleChangeIsbn = (e) => {
-    e.preventDefault(); // prevent the default action
-    setIsbn(e.target.value); // set name to e.target.value (event)
+  const handleSelectTitle = (selectedInput) => {
+    setTitle(selectedInput.value);
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    axios
+      .get(
+        "https://openlibrary.org/search.json?title=" +
+          inputValue +
+          "&fields=title&limit=5"
+      )
+      .then((response) => {
+        const options = [];
+        response.data.docs.forEach((result) => {
+          options.push({
+            label: result.title,
+            value: result.title,
+          });
+        });
+        callback(options);
+      });
+  };
+
+  const handleChangeIsbn = async (e) => {
+    e.preventDefault();
+    setIsbn(e.target.value);
+    if (e.target.value.length === 13 || e.target.value.length === 10) {
+      try {
+        const response = await axios.get(
+          "https://openlibrary.org/isbn/" + e.target.value + ".json"
+        );
+        if (response.status === 200) {
+          setBookResponse(response.data);
+          setTitle(response.data.title);
+          console.log("title", response.data.title);
+          if (response.data.authors) {
+            let tempAuthorArr = [];
+            console.log("retrieved authors", response.data.authors);
+            const authorsArr = response.data.authors;
+            for (let i = 0; i < response.data.authors.length; i++) {
+              const authorResponse = await axios.get(
+                "https://openlibrary.org" + authorsArr[i].key + ".json"
+              );
+              if (authorResponse.status === 200)
+                tempAuthorArr.push(authorResponse.data.name);
+            }
+            setAuthors(tempAuthorArr);
+          } else {
+            setAuthors([]);
+          }
+        }
+      } catch (error) {
+        console.log("Error retrieving book info", error);
+      }
+    } else {
+      setBookResponse(null);
+      setAuthors([]);
+    }
   };
 
   const handleChangePrice = (e) => {
@@ -73,7 +134,6 @@ function CreateListing() {
   const uploadFiles = async (files) => {
     console.log("Starting upload");
     const ReactS3Client = new S3(awsConfig);
-    // the name of the file uploaded is used to upload it to S3
     try {
       let imageUrls = [];
       console.log("files", files);
@@ -90,7 +150,6 @@ function CreateListing() {
       console.log("File upload error:", error);
       return null;
     }
-
     /*
      * {
      *   Response: {
@@ -105,18 +164,20 @@ function CreateListing() {
   const tryCreateListing = async (e) => {
     e.preventDefault();
     try {
-      const responseProfile = await axios.get(process.env.REACT_APP_API_BASE + "/user", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const responseProfile = await axios.get(
+        process.env.REACT_APP_API_BASE + "/user",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log("PROFILE RESPONSE:", responseProfile);
       const userId = responseProfile.data.profile._id;
-
       const imageUrls = await uploadFiles(images);
       const responseCreateListing = await axios.post(
         process.env.REACT_APP_API_BASE + "/createlisting",
         {
           user_id: userId,
-          name: title,
+          title: title,
           isbn: isbn,
           price: price,
           description: description,
@@ -140,15 +201,58 @@ function CreateListing() {
         <SimpleGrid columns={2} spacing={10} px={10}>
           <Box>
             <Stack spacing={4}>
-              <FormControl onChange={handleChangeTitle} isRequired>
-                <FormLabel>Title</FormLabel>
-                <Input type="text" />
+              <FormControl isRequired>
+                <FormLabel>Book Title</FormLabel>
+                <AsyncCreatableSelect
+                  placeholder="Title of your book"
+                  value={{ value: title, label: title }}
+                  loadOptions={loadOptions}
+                  onInputChange={handleChangeTitle}
+                  onChange={handleSelectTitle}
+                  // onCreateOption={handleCreateOption}
+                  isClearable
+                />
               </FormControl>
 
-              <FormControl onChange={handleChangeIsbn} isRequired>
+              <FormControl
+                onChange={async (e) => {
+                  await handleChangeIsbn(e);
+                }}
+                isRequired
+              >
                 <FormLabel>ISBN</FormLabel>
-                <Input type="text" />
+                <InputGroup>
+                  <Input placeholder="13-digit ISBN number" type="text" />
+                  <InputRightElement
+                    children={bookResponse && <CheckIcon color="green.500" />}
+                  />
+                </InputGroup>
               </FormControl>
+
+              <Stack spacing={0}>
+                {bookResponse && (
+                  <Text fontSize="lg">{bookResponse.title}</Text>
+                )}
+                {bookResponse && bookResponse.edition_name && (
+                  <Text as="i">{bookResponse.edition_name}</Text>
+                )}
+                {bookResponse && authors.length !== 0 && (
+                  <Text>
+                    by{" "}
+                    {[
+                      authors.slice(0, -1).join(", "),
+                      authors.slice(-1)[0],
+                    ].join(authors.length < 2 ? "" : " and ")}
+                  </Text>
+                )}
+              </Stack>
+              {bookResponse && bookResponse.covers && (
+                <Image
+                  boxSize="300px"
+                  objectFit="contain"
+                  src={"https://covers.openlibrary.org/b/isbn/" + isbn + ".jpg"}
+                ></Image>
+              )}
 
               <FormControl onChange={handleChangePrice} isRequired>
                 <FormLabel>Price</FormLabel>

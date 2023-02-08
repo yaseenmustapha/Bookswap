@@ -1,6 +1,8 @@
 # Bookswap
 
-Full-stack web application for trading and selling used textbooks built using React.js, Python, Flask, and MongoDB.
+Full-stack web application for students to trade and sell their used books and textbooks. Built using React.js for front-end and Python, Flask, and MongoDB for back-end RESTful API. Uses JSON Web Token for user authentication and Open Library API for retrieving book information.
+
+Production version live at [bookswap.herokuapp.com](https://bookswap.herokuapp.com).
 
 ## Start Flask backend:
 ### 1. Create venv:
@@ -38,7 +40,7 @@ Try http://localhost:5000/members or http://127.0.0.1:5000/members in your brows
 ```
 cd client
 npm install
-npm start
+npm run dev
 ```
 Try http://localhost:3000 or http://127.0.0.1:3000 to test frontend.
 

@@ -101,7 +101,7 @@ def listing():
 def searchlistings():
     args = request.args
     search_term = args.get("search_term")
-    listings_collection.create_index([("name", 'text')])
+    listings_collection.create_index([("title", 'text')])
     search_results = parse_json(listings_collection.find({ "$text": { "$search": search_term } }))
     for x in range(len(search_results)):
         user_id = search_results[x]["user_id"]["$oid"]

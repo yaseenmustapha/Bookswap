@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 
 function Login() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [showPassword, setShowPassword] = useState(false);
