@@ -217,7 +217,6 @@ function CreateListing() {
               <FormControl
                 onChange={async (e) => {
                   await handleChangeIsbn(e);
-                  // getAuthors(bookInfo);
                 }}
                 isRequired
               >

@@ -8,6 +8,7 @@ import {
   Center,
   FormControl,
   Heading,
+  HStack,
   Image,
   Input,
   InputGroup,
@@ -15,7 +16,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
+import { RepeatIcon, SearchIcon } from "@chakra-ui/icons";
 
 function SearchBar() {
   const [search, setSearch] = useState();
@@ -29,9 +30,12 @@ function SearchBar() {
   const trySearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(process.env.REACT_APP_API_BASE + "/searchlistings", {
-        params: { search_term: search },
-      });
+      const response = await axios.get(
+        process.env.REACT_APP_API_BASE + "/searchlistings",
+        {
+          params: { search_term: search },
+        }
+      );
       console.log("search result: ", response.data);
       setSearchResults(response.data);
     } catch (error) {
@@ -83,9 +87,17 @@ function SearchBar() {
                   </CardBody>
 
                   <CardFooter>
-                    <Button variant="solid" colorScheme="blue">
-                      View listing
-                    </Button>
+                    <HStack>
+                      <Button variant="solid" colorScheme="blue">
+                        View listing
+                      </Button>
+                      <Button leftIcon={<RepeatIcon />} variant="solid" colorScheme="green">
+                        Swap
+                      </Button>
+                      <Button leftIcon={<Text>$</Text>} variant="solid" colorScheme="green">
+                        Buy
+                      </Button>
+                    </HStack>
                   </CardFooter>
                 </Stack>
               </Card>
