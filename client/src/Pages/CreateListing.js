@@ -8,6 +8,7 @@ import Header from "../Components/Header";
 import axios from "axios";
 import { useAuth } from "../Hooks/useAuth";
 import S3 from "react-aws-s3";
+import { v4 as uuidv4 } from "uuid";
 import { AsyncCreatableSelect } from "chakra-react-select";
 import {
   Box,
@@ -140,7 +141,7 @@ function CreateListing() {
       for (let i = 0; i < files.length; i++) {
         const response = await ReactS3Client.uploadFile(
           files[i].file,
-          files[i].filename
+          uuidv4()
         );
         const imageUrl = response.location;
         imageUrls.push(imageUrl);
