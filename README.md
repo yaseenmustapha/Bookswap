@@ -1,6 +1,6 @@
 # Bookswap
 
-Full-stack web application for students to trade and sell their used books and textbooks. Built using React.js for front-end and Python, Flask, and MongoDB for back-end RESTful API. Uses JSON Web Token for user authentication and Open Library API for retrieving book information.
+Full-stack web application for students to trade and sell their used books and textbooks. Built using React.js for front-end, Python and Flask for RESTful API, and MongoDB for database. Uses self-built JSON Web Token user authentication, Open Library API for retrieving book information, and AWS S3 buckets for uploading and storing user-taken images in the cloud.
 
 Production version live at [bookswap.herokuapp.com](https://bookswap.herokuapp.com).
 
