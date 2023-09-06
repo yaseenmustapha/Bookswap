@@ -33,13 +33,13 @@ function useProvideAuth() {
         setCookie("jwt", response.data.access_token);
         setCookie("username", username);
         return response.status;
-      })
+      });
   };
 
   const logout = () => {
     removeCookie("jwt", { path: "/" });
     removeCookie("username", { path: "/" });
-  }
+  };
 
   const register = async (username, email, password) => {
     return axiosClient
@@ -52,8 +52,8 @@ function useProvideAuth() {
         setCookie("jwt", response.data.access_token);
         setCookie("username", username);
         return response.status;
-      })
-  }
+      });
+  };
 
   return {
     isAuthenticated,

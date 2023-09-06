@@ -28,7 +28,7 @@ import {
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
-  const {isAuthenticated, currentUser, logout} = useAuth();
+  const { isAuthenticated, currentUser, logout } = useAuth();
 
   const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
@@ -74,7 +74,7 @@ export default function Header() {
               color: linkHoverColor,
             }}
           >
-          <Image h="10" src={require("../Images/bookswap_logo.png")} />
+            <Image h="10" src={require("../Images/bookswap_logo.png")} />
           </Link>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
@@ -180,6 +180,7 @@ const DesktopNav = () => {
               <Link
                 p={2}
                 href={navItem.href ?? "#"}
+                target="_blank"
                 fontSize={"sm"}
                 fontWeight={500}
                 color={linkColor}
@@ -219,6 +220,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
   return (
     <Link
       href={href}
+      target="_blank"
       role={"group"}
       display={"block"}
       p={2}
@@ -275,6 +277,7 @@ const MobileNavItem = ({ label, children, href }) => {
         py={2}
         as={Link}
         href={href ?? "#"}
+        target="_blank"
         justify={"space-between"}
         align={"center"}
         _hover={{
@@ -309,7 +312,7 @@ const MobileNavItem = ({ label, children, href }) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Link key={child.label} py={2} href={child.href} target="_blank">
                 {child.label}
               </Link>
             ))}
@@ -324,19 +327,19 @@ const NAV_ITEMS = [
     label: "About Us",
     children: [
       {
-        label: "Our Team",
-        subLabel: "We are so epic",
-        href: "#",
+        label: "Code Repo",
+        subLabel: "Proudly open source",
+        href: "https://github.com/yaseenmustapha/Bookswap",
       },
       {
-        label: "Our Story",
-        subLabel: "An epic saga",
-        href: "#",
+        label: "GitHub",
+        subLabel: "github.com/yaseenmustapha",
+        href: "https://github.com/yaseenmustapha",
       },
     ],
   },
   {
     label: "Contact Us",
-    href: "#",
+    href: "mailto:yaseenmust@gmail.com",
   },
 ];
