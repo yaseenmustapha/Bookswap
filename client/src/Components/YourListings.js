@@ -18,27 +18,34 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { conditionAdapter } from "../Utils";
 
 function YourListings() {
   const [listings, setListings] = useState();
-  const {isAuthenticated, token} = useAuth();
+  const { isAuthenticated, token } = useAuth();
   const [listingDeleted, setListingDeleted] = useState(false);
 
   useEffect(() => {
     const getListingsForCurrentUser = async () => {
       try {
-        const responseProfile = await axios.get(process.env.REACT_APP_API_BASE + "/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const responseProfile = await axios.get(
+          process.env.REACT_APP_API_BASE + "/user",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         console.log(
           "Get user profile response: ",
           responseProfile.data.profile
         );
         if (responseProfile.status === 200) {
           const user_id = responseProfile.data.profile._id;
-          const responseListings = await axios.get(process.env.REACT_APP_API_BASE + "/listings", {
-            params: { user_id },
-          });
+          const responseListings = await axios.get(
+            process.env.REACT_APP_API_BASE + "/listings",
+            {
+              params: { user_id },
+            }
+          );
           console.log("Listings response", responseListings);
           setListings(responseListings.data);
         }
@@ -55,7 +62,7 @@ function YourListings() {
     }
   }, [listingDeleted]);
 
-  const deleteListing = listingId => async e => {
+  const deleteListing = (listingId) => async (e) => {
     e.preventDefault();
     try {
       const response = await axios.get(
@@ -73,7 +80,7 @@ function YourListings() {
     } catch (error) {
       console.log("Delete listing error error: ", error);
     }
-  }
+  };
 
   return (
     <>
@@ -114,6 +121,7 @@ function YourListings() {
                 <Stack mt="6" spacing="3">
                   <Heading size="md">{listing.title}</Heading>
                   <Text>ISBN: {listing.isbn}</Text>
+                  <Text>Condition: {conditionAdapter(listing.condition)}</Text>
                   <Text>{listing.description}</Text>
                   <Text color="blue.600" fontSize="2xl">
                     ${Number(listing.price).toFixed(2)}
@@ -123,15 +131,15 @@ function YourListings() {
               <Divider />
               <CardFooter>
                 <ButtonGroup spacing="2">
-                  <Button variant="solid" colorScheme="blue">
+                  {/* <Button variant="solid" colorScheme="blue">
                     Edit
-                  </Button>
+                  // </Button> */}
                   <Button
                     variant="ghost"
                     colorScheme="red"
                     onClick={deleteListing(listing._id)}
                   >
-                    Delete
+                    Delete listing
                   </Button>
                 </ButtonGroup>
               </CardFooter>

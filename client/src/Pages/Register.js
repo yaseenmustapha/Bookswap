@@ -61,11 +61,7 @@ function Register() {
   return (
     <>
       <Header></Header>
-      <Flex
-        minH={"10vh"}
-        align={"center"}
-        justify={"center"}
-      >
+      <Flex minH={"10vh"} align={"center"} justify={"center"}>
         <Stack spacing={8} mx={"auto"} w={"500px"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
             <Heading fontSize={"4xl"} textAlign={"center"}>

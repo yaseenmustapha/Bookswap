@@ -105,8 +105,11 @@ def searchlistings():
     search_results = parse_json(listings_collection.find({ "$text": { "$search": search_term } }))
     for x in range(len(search_results)):
         user_id = search_results[x]["user_id"]["$oid"]
-        username = parse_json(users_collection.find_one({"_id" : ObjectId(user_id)}))["username"]
+        listing_user = parse_json(users_collection.find_one({"_id" : ObjectId(user_id)}))
+        username = listing_user["username"]
+        email = listing_user["email"]
         search_results[x]["username"] = username
+        search_results[x]["email"] = email
     return search_results
 
 # Get username from user_id
